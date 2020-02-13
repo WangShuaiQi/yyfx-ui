@@ -1,0 +1,13 @@
+@function pxtorem($val){
+  @return ($val*1/20);
+}
+@mixin clear(){
+  &:before,&:after{
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+
+$boxbodercolor:#51808a;

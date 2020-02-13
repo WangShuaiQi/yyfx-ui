@@ -1,0 +1,181 @@
+.tunnel-card {
+    display: flex;
+    flex-direction: column;
+    background: rgba(8, 47, 76, 0.2);
+    border: 1px solid rgba(8, 47, 76, 0.2);
+    position: relative;
+    border-radius: 7px;
+  }
+  .ellipsis{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .list-card .card-body{
+    max-width:700px;
+    max-height:450px;
+    overflow:scroll!important;
+  }
+  .list-card .card-body::-webkit-scrollbar{
+    width: 10px;
+    height: 10px;
+    display: block;
+    background: #072c47; /* 整个滚条背景 */
+  }
+  .list-card .card-body::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background: rgba(153, 204, 255, 0.3);
+  }
+  .list-card .card-body::-webkit-scrollbar-thumb:hover{
+    background: rgba(153, 204, 255, 0.5);
+  }
+  .list-card .card-body::-webkit-scrollbar-button {
+    width: 2px;
+    height: 2px;
+    background: transparent;
+  }
+  .list-card img{
+    position: inherit!important;
+  }
+  .list-card td{
+    padding:4px 5px;
+    text-align:center;
+    border:1px solid rgba(14, 75, 104, 0.7294117647058823);
+  }
+  .list-card tr{
+    transition: background 0.3s;
+  }
+  .list-card tr:hover{
+    background: #0a6b9c;
+  }
+  .button {
+    height: 25px;
+    width: 80px;
+    text-align: center;
+    line-height: 25px;
+    color: #fff;
+    cursor: pointer;
+    background: url("/static/img/tunnel/btn.png") no-repeat;
+    background-size: 100%;
+    transition: all 0.4s;
+    margin: 0 auto;
+    margin-top: 10px;
+  }
+  .button:hover{
+    filter: brightness(160%);
+    -webkit-filter: brightness(160%);
+  }
+  .police-card ul span{
+    min-width:96px!important;
+  }
+  .jingli-card{
+    z-index:100;
+    min-width:700px;
+  }
+  .jingli-card .card-body{
+    padding: 10px 30px;
+    height:500px;
+    padding-top: 0!important;
+    overflow-y: scroll;
+  }
+  .jingli-card .msg{
+    border-bottom: 1px solid #487581;
+    padding:10px 0;
+    box-sizing: content-box;
+  }
+  .jingli-card .msg p{
+    margin-top: 0!important;
+  }
+  .jingli-card .msg table{
+    width: 100%;
+    margin: 10px 0;
+    border:1px solid #487581;
+  }
+  .jingli-card .msg table td{
+    padding:5px 0;
+    text-align: center;
+    border:1px solid #487581;
+  }
+  .jingli-card .line{
+    margin:5px 0;
+    display: flex;
+  }
+  .jingli-card span:nth-child(2n - 1){
+    flex:3;
+    color:#58dcfe;
+    text-align: right;
+    margin-right: 5px;
+  }
+  .jingli-card span:nth-child(2n){
+    flex:6;
+  }
+  .tunnel-card::after{
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    border-radius: 6px;
+    box-shadow: 0 0 15px #7498b1 inset!important;
+    z-index: -1;
+  }
+  .tunnel-card::before{
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 22px;
+    filter: brightness(85%);
+    -webkit-filter: brightness(85%);
+    background: url("/static/img/tunnel/light.png") center center no-repeat;
+  }
+  .tunnel-card .card-header {
+    z-index: 998!important;
+    color: rgba(255, 255, 255, 0.9)!important;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    background: url("/static/img/tunnel/card-header.png") no-repeat;
+    background-size: 70% 30px;
+    z-index: -2;
+    font-size: 14px;
+  }
+  .tunnel-card .card-body {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 20px);
+    overflow: hidden;
+    position: relative;
+    line-height: 1.2rem;
+  }
+  .tunnel-card .card-body img {
+    width: 36px;
+    height: 36px;
+    position: absolute;
+    top: 11px;
+    left: 11px;
+    transition: all 0.4s;
+  }
+  .tunnel-card .card-body ul {
+    min-width:190px;
+    margin-left: 36px;
+  }
+  .tunnel-card .card-body ul li {
+    color: #fff;
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+  .tunnel-card .card-body ul span {
+    display: inline-block;
+    min-width:66px;
+    margin-left: 10px;
+    margin-right: 5px;
+    text-align: right;
+    color: #58dcfe;
+  }
+  

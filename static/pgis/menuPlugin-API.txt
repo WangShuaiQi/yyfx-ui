@@ -1,0 +1,112 @@
+MapToolMenuPlugin接口文档：
+    /**
+     * 地图上点工具js文件
+     * 使用：var menu = new MapToolMenuPlugin($或者axios, mapInstance, qs)
+     *      menu.addPoints(types)
+     *      menu.removePoints(type)
+     *      menu.addCustomePoints(type, points, icon)
+     *      具体类型参见 menu.overlayType
+     * 功能：
+     *      1.多类型同时上图
+     *      2.按照提供的范围上图
+     *      3.渲染成功回调（无参）
+     *      4.自定义类型上图
+     *      5.默认点聚合功能
+     *      6.自定义范围上图
+     *      7.标注点右键回调(回调参数：点对象，'contextmenu', event(点击事件对象))
+     *      8.统计上图的指定类型的点的数量
+     */
+
+    MapToolMenuPlugin对象：
+        new MapToolMenuPlugin($或者axios, mapInstance, qs)
+        /**
+        * 
+        * @param {*} ajax $/Jquery/axios
+        * @param {*} mapInstance init.js实例
+        * @param {*} qs npm qs包
+        */
+    addPoints方法参数：
+        // 1.多类型同时上图，2.按照提供的范围上图，3.渲染成功回调（无参），4.自定义上图点击事件回掉（点信息）
+        /**
+         * types: string/array,例如： ['netbar', 'hotel']或者 'netbar'
+         * range: 多边形,不传是参数为空 如： '103.51318359375,31.453857421875,102.7880859375,29.190673828125,105.40283203125,28.861083984375,105.479736328125,31.102294921875'
+         * cb: 指定回调,
+         * cluster: 是否聚合
+         * clickCb 点击事件回掉
+         */
+        overlayType: {
+            wifi: { type: "wifi", name: "普通WIFI" },
+            police: { type: "police", name: "已报备警力" },
+            police1: { type: "police1", name: "未报备警力" },
+            person: { type: "person", name: "重点人员" },
+            car: { type: "car", name: "重点车辆" },
+            circle: { type: "circle", name: "圆形" },
+            rect: { type: "rect", name: "矩形" },
+            poly: { type: "poly", name: "多边形" },
+            line: { type: "line", name: "画线" },
+            area: { type: "area", name: "测面积" },
+            faceKakou: { type: "faceKakou", name: "人脸卡口" },
+            tunnel: {
+                chuan: { type: "chuan", name: "环川" },
+                rong: { type: "rong", name: "环蓉" },
+                train: { type: "train", name: "火车站" },
+                airport: { type: "airport", name: "机场" },
+                dock: { type: "dock", name: "码头" },
+                toll: { type: "toll", name: "收费站" },
+                other: { type: "other", name: "其他" },
+                firstClass: { type: "firstClass", name: "一级" },
+                secondClass: { type: "secondClass", name: "二级" },
+                thirdClass: { type: "thirdClass", name: "三级" },
+                automobile: { type: "automobile", name: "汽车站" },
+            },
+            pgisPoint: {
+                netbar: { type: "netbar", name: "网吧" },
+                hotel: { type: "hotel", name: "旅店" },
+                camera: { type: "camera", name: "天网" },
+                safe: { type: "safe", name: "治安" },
+                hospital: { type: "hospital", name: "医院" },
+                school: { type: "school", name: "学校" },
+                gv: { type: "gv", name: "政府" },
+                trafficPolice: { type: "trafficPolice", name: "交警" },
+            },
+            distance: { type: "distance", name: "测距" },
+            specialWifi: { type: "specialWifi", name: "特种WIFI" },
+            lineTunnel: { type: "lineTunnel", name: "线通道" },
+        },
+    addCustomePoints方法：
+        //添加自定义点
+        /**
+        * type: string 自定义参数类型,名字自取,例如：'netbar'
+        * points: Array 自定义点集合，经纬度字段必须为lon,lat， 例如：[{lon:130.1212112,lat:30.124121}]
+        * icon: string 地图上图图标名称， 例如：'car'，   备注：获取 mapApp.imgList包含的图标；如不存在自行添加；
+        * range: string 地图范围经纬度集合字符串，可以不给， 给了就按照指定区域上图，例如：'103.51318359375,31.453857421875,102.7880859375,29.190673828125,105.40283203125,28.861083984375,105.479736328125,31.102294921875'
+        * cb:  function 回调
+        */
+    removePoints(type)方法：
+        type为需要移除的点的类型，例如：'netbar', 不传为移除所有菜单上的覆盖物
+    
+    addHeatMap(points, type, container)方法：
+    /**
+    * 添加某种类型的热力图
+    * @param {*} points 点集合， 经纬度字段必须为 lng ,lat 数字类型
+    * @param {*required object} config like: {container: document.querySelector('#map'), backgroundColor: rgba(,,,), gradient:{'.5:'blue','.8':'red','.95':'white'}
+    * @param {*} type 点类型 如：'car', 'police'
+    */
+    removeHeatMap()方法 :移除地图上的热力图，参数：无
+
+window.mapToolToPersonInfo方法：
+    功能：点击重点人员身份证号调用的方法，重写该方法以实现自定义详情
+    function mapToolToPersonInfo(e){
+        var zjhm=$(e).data('zjhm') //获取证件号码
+    }
+
+//切换地图底色，参数：blue 或 white
+mapInstance.changeMapColors(color); //注意：不用 MapToolMenuPlugin 实例调用，直接用 mapInstance 调用
+
+//统计上图的指定类型的点的数量
+var tool = new MapToolMenuPlugin()
+for(var key in tool.clusterType){
+    if(tool.clusterType[key].show){
+        var length = tool.clusterType[key].pointsInWindow.length;
+    }
+}

@@ -1,0 +1,19 @@
+@import "./varble";
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+  font-size: 0.8rem;
+  font-family: "Microsoft YaHei";
+  scrollbar-highlight-color:transparent;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+
+  .el-loading-mask{
+    &.is-fullscreen{
+      background-color: rgba(255,255,255,.3);
+    }
+  }
+}
