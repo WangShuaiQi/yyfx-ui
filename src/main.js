@@ -42,32 +42,25 @@ axios.defaults.withCredentials = true;
 /**
  * 这里闭包执行keycloak认证;
  */
-// (async ()=>{
-//     console.log("keycloak start", window.location.origin)
-//     let kc = await kcAuth.getKeyCloak(window.location.origin + "/static/keycloak/keycloak.json")
-//     Vue.prototype.$kc = kc
-//     let authed = await kcAuth.reqtoken(kc)
-//     console.log("keycloak", authed, kc)
-//     if (authed) {
-//         let userInfo = await kcAuth.getUpmsUserInfo(kc, authed); //获取加载的用户信息
-//         new Vue({
-//             el: '#app',
-//             router,
-//             store,
-//             components: { App },
-//             template: '<App/>'
-//         })
-//     } else {
-//         kc.logout()
-//     }
-// })();
-new Vue({
-    el: '#app',
-    router,
-    store,
-    components: { App },
-    template: '<App/>'
-})
+(async ()=>{
+    console.log("keycloak start", window.location.origin)
+    let kc = await kcAuth.getKeyCloak(window.location.origin + "/static/keycloak/keycloak.json")
+    Vue.prototype.$kc = kc
+    let authed = await kcAuth.reqtoken(kc)
+    console.log("keycloak", authed, kc)
+    if (authed) {
+        // let userInfo = await kcAuth.getUpmsUserInfo(kc, authed); //获取加载的用户信息
+        new Vue({
+            el: '#app',
+            router,
+            store,
+            components: { App },
+            template: '<App/>'
+        })
+    } else {
+        kc.logout()
+    }
+})();
 
 /**
  * 注册接口加载监听,实现加载的效果

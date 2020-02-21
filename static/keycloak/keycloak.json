@@ -1,11 +1,10 @@
 {
   "realm": "master",
-  "auth-server-url": "http://80.205.2.91:8080/auth",
-  "ssl-required": "none",
+  "auth-server-url": "http://172.16.1.250:8080/auth",
+  "ssl-required": "external",
   "resource": "zhili",
   "credentials": {
-    "secret": "d0a008d4-2301-49e9-a1d3-b29e8dcaf0d3"
+    "secret": "b4d6652d-46ce-4cfe-8ba7-594a6495de5f"
   },
-  "use-resource-role-mappings": true,
   "policy-enforcer": {}
 }

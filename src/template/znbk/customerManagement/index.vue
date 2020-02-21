@@ -4,13 +4,16 @@
       <el-page-header content="客户管理"></el-page-header>
       <el-form ref="filter" :model="metadata.filter" :inline="true">
         <el-form-item label="业务员">
-          <el-input v-model="metadata.filter.ywy" placeholder="请输入业务员行姓名" size="mini"></el-input>
+          <el-input v-model="metadata.filter.createrName" placeholder="请输入业务员行姓名" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="公司名称">
-          <el-input v-model="metadata.filter.name" placeholder="请输入公司名称" size="mini"></el-input>
+          <el-input v-model="metadata.filter.customerName" placeholder="请输入公司名称" size="mini"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="mini" @click="dialogFlag=true">新增客户</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="mini" @click="delAll">批量删除</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="mini" @click="search">搜索</el-button>
@@ -24,9 +27,9 @@
       <el-table :data="tableList" size="mini" @selection-change="tableChange">
         <el-table-column type="selection" width="80"></el-table-column>
         <el-table-column label="公司名称" :show-overflow-tooltip="true" prop="name"></el-table-column>
-        <el-table-column label="地址" :show-overflow-tooltip="true" prop="dz"></el-table-column>
-        <el-table-column label="电话" :show-overflow-tooltip="true" prop="dh"></el-table-column>
-        <el-table-column label="业务员" v-if="true" :show-overflow-tooltip="true" prop="ywy"></el-table-column>
+        <el-table-column label="地址" :show-overflow-tooltip="true" prop="address"></el-table-column>
+        <el-table-column label="电话" :show-overflow-tooltip="true" prop="tel"></el-table-column>
+        <el-table-column label="业务员" v-if="true" :show-overflow-tooltip="true" prop="creator"></el-table-column>
         <el-table-column label="操作" v-if="true">
           <template slot-scope="scope">
             <el-button size="mini" type="text" @click="edit(scope.row)">编辑</el-button>
@@ -57,10 +60,10 @@
             <el-input v-model="formObj.name" size="mini"></el-input>
           </el-form-item>
           <el-form-item label="电话">
-            <el-input v-model="formObj.dh" size="mini"></el-input>
+            <el-input v-model="formObj.tel" size="mini"></el-input>
           </el-form-item>
           <el-form-item label="地址">
-            <el-input v-model="formObj.dz" size="mini"></el-input>
+            <el-input v-model="formObj.address" size="mini"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -73,7 +76,11 @@
 </template>
 <script>
 import moment from "moment";
-import { getZnbkList, delControlFile } from "../../znbk/api/znbkServiceApi";
+import {
+  customerList,
+  customerCreate,
+  customerDelete
+} from "../../znbk/api/znbkServiceApi";
 export default {
   data() {
     return {
@@ -81,15 +88,15 @@ export default {
         paginationParam: {
           page: 1,
           pageSize: 10,
-          totalCount: 1
+          totalCount: 0
         },
         filter: {
-          ywy: "",
-          name: ""
+          customerName: "", //客户名字
+          createrName: "" //创建者名字
         }
       },
-      formObj: { name: "", dz: "", dh: "", ywy: "" },
-      tableList: [{ name: "公司名称", dz: "地址", dh: "电话", ywy: "业务员" }],
+      formObj: { name: "", address: "", tel: "" },
+      tableList: [],
       checkTable: [],
       dialogTitle: "新增",
       dialogFlag: false
@@ -102,25 +109,14 @@ export default {
     // 获取列表
     async getList(page) {
       let metadata = {};
-      metadata.page = page;
-      metadata.pageSize = this.metadata.paginationParam.pageSize;
-      metadata.status = this.metadata.filter.status;
-      metadata.orgId = this.metadata.filter.orgId;
-      metadata.bkdxType = this.metadata.filter.bkdxType;
-      metadata.bkdxValue = this.metadata.filter.bkdxValue;
-      //   let tableList = await getZnbkList(metadata);
-      //   this.tableList = tableList.data.data.resultSet;
-      //   this.tableList.map(item => {
-      //     let dealNameArr = [];
-      //     if (item.yjjsmjList) {
-      //       item.yjjsmjList.map(items => {
-      //         dealNameArr.push(items.name);
-      //       });
-      //       item.dealName = dealNameArr.join(",");
-      //     }
-      //   });
-      //   this.metadata.paginationParam =
-      //     tableList.data.data.metadata.paginationParam;
+      metadata.page = 1;
+      metadata.pageSize = 10;
+      metadata.customerName = this.metadata.filter.customerName;
+      metadata.createrName = this.metadata.filter.createrName;
+
+      let tableList = await customerList(metadata);
+      this.tableList = tableList.list;
+      this.metadata.paginationParam.totalCount = tableList.total;
     },
     // 重置
     reset() {
@@ -130,10 +126,8 @@ export default {
           pageSize: 10
         },
         filter: {
-          status: "",
-          orgId: "",
-          bkdxType: "",
-          bkdxValue: ""
+          customerName: "",
+          createrName: ""
         }
       };
       this.getList(1);
@@ -146,7 +140,40 @@ export default {
     currentChange(value) {
       this.getList(value);
     },
-    tableChange(val) {},
+    tableChange(val) {
+      this.checkTable = val;
+    },
+    // 批量删除
+    delAll() {
+      this.$confirm("是否确定删除？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        if (this.checkTable.length == 0) {
+          this.$message.warning("至少选择一个客户");
+        } else {
+          let formObj = {};
+          let ids = [];
+          this.checkTable.map(item => {
+            ids.push(item.id);
+          });
+          formObj.ids = ids.join(",");
+
+          customerDelete(formObj).then(res => {
+            if (res == 200) {
+              this.$message({
+                type: "success",
+                message: "删除成功！"
+              });
+              this.reset();
+            } else {
+              this.$message.error("删除失败！");
+            }
+          });
+        }
+      });
+    },
     // 删除
     del(row) {
       this.$confirm("是否确定删除？", "提示", {
@@ -154,8 +181,10 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        delControlFile(row.oid).then(res => {
-          console.log(res);
+        let formObj = {
+          ids: row.id
+        };
+        customerDelete(formObj).then(res => {
           if (res == 200) {
             this.$message({
               type: "success",
@@ -169,11 +198,23 @@ export default {
       });
     },
     // 保存
-    save() {},
+    async save() {
+      let status = await customerCreate(this.formObj);
+      if (status == 200) {
+        this.$message({
+          type: "success",
+          message: "保存成功！"
+        });
+        this.dialogFlag = false;
+        this.reset();
+      } else {
+        this.$message.error("保存失败！");
+      }
+    },
     // 编辑
     edit(row) {
       this.dialogTitle = "编辑";
-      this.formObj = row;
+      this.formObj = JSON.parse(JSON.stringify(row));
       this.dialogFlag = true;
     },
     // 关闭清空

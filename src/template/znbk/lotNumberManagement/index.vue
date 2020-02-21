@@ -4,10 +4,13 @@
       <el-page-header content="批号管理"></el-page-header>
       <el-form ref="filter" :model="metadata.filter" :inline="true">
         <el-form-item label="产品名称">
-          <el-input v-model="metadata.filter.ywy" placeholder="请输入产品名称" size="mini"></el-input>
+          <el-input v-model="metadata.filter.productName" placeholder="请输入产品名称" size="mini"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="mini" @click="dialogFlag=true">新增批号</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="mini" @click="delAll">批量删除</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="mini" @click="search">搜索</el-button>
@@ -17,12 +20,16 @@
     <el-main>
       <el-table :data="tableList" size="mini" @selection-change="tableChange">
         <el-table-column type="selection" width="80"></el-table-column>
-        <el-table-column label="产品名称" :show-overflow-tooltip="true" prop="name"></el-table-column>
-        <el-table-column label="产品规格" :show-overflow-tooltip="true" prop="dz"></el-table-column>
-        <el-table-column label="生产批号" :show-overflow-tooltip="true" prop="dh"></el-table-column>
-        <el-table-column label="生产日期" :show-overflow-tooltip="true" prop="ywy"></el-table-column>
-        <el-table-column label="有效期至" :show-overflow-tooltip="true" prop="ywy"></el-table-column>
-        <el-table-column label="入库数量" :show-overflow-tooltip="true" prop="ywy"></el-table-column>
+        <el-table-column label="产品名称" :show-overflow-tooltip="true" prop="productName"></el-table-column>
+        <el-table-column label="产品规格" :show-overflow-tooltip="true" prop="productStandard"></el-table-column>
+        <el-table-column label="生产批号" :show-overflow-tooltip="true" prop="batchId"></el-table-column>
+        <el-table-column label="生产日期" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.produceTimeL|formatTime}}</template>
+        </el-table-column>
+        <el-table-column label="有效期至" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.validityTimeL|formatTime}}</template>
+        </el-table-column>
+        <el-table-column label="产品数量" :show-overflow-tooltip="true" prop="productCount"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button size="mini" type="text" @click="edit(scope.row)">编辑</el-button>
@@ -52,32 +59,61 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="商品名称">
-                <el-input v-model="formObj.name" size="mini"></el-input>
+                <el-select
+                  v-model="formObj.productName"
+                  size="mini"
+                  placeholder="请输入商品名称"
+                  filterable
+                >
+                  <el-option
+                    v-for="(item,index) in productList"
+                    :key="index"
+                    :label="item.productName"
+                    :value="item.productName"
+                  ></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="产品规格">
-                <el-input v-model="formObj.dh" size="mini"></el-input>
+                <el-input v-model="formObj.productStandard" size="mini" placeholder="请输入产品规格"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="生产批号">
-                <el-input v-model="formObj.dz" size="mini"></el-input>
+                <el-input v-model="formObj.batchId" size="mini" placeholder="请输入生产批号"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="生产日期">
-                <el-input v-model="formObj.name" size="mini"></el-input>
+                <el-date-picker
+                  v-model="formObj.produceTimeL"
+                  type="date"
+                  placeholder="请输入生产日期"
+                  size="mini"
+                  value-format="timestamp"
+                ></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="有效期至">
-                <el-input v-model="formObj.dh" size="mini"></el-input>
+                <el-date-picker
+                  v-model="formObj.validityTimeL"
+                  type="date"
+                  placeholder="请输入有效期至"
+                  size="mini"
+                  value-format="timestamp"
+                ></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="入库数量">
-                <el-input v-model="formObj.dz" size="mini"></el-input>
+              <el-form-item label="产品数量">
+                <el-input
+                  v-model="formObj.productCount"
+                  size="mini"
+                  placeholder="请输入数字格式"
+                  type="number"
+                ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -92,7 +128,13 @@
 </template>
 <script>
 import moment from "moment";
-import { getZnbkList, delControlFile } from "../../znbk/api/znbkServiceApi";
+import {
+  batchnumberCreate,
+  batchnumberList,
+  batchnumberEdit,
+  batchnumberDelete,
+  productList
+} from "../../znbk/api/znbkServiceApi";
 export default {
   data() {
     return {
@@ -103,43 +145,50 @@ export default {
           totalCount: 1
         },
         filter: {
-          ywy: "",
-          name: ""
+          productName: ""
         }
       },
-      formObj: { name: "", dz: "", dh: "", ywy: "" },
-      tableList: [{ name: "公司名称", dz: "地址", dh: "电话", ywy: "业务员" }],
+      formObj: {
+        batchId: "",
+        produceTimeL: "",
+        productName: "",
+        productStandard: "",
+        validityTimeL: "",
+        productCount: ""
+      },
+      tableList: [],
       checkTable: [],
+      productList: [],
       dialogTitle: "新增",
       dialogFlag: false
     };
   },
   mounted() {
     this.getList(1);
+    this.getProductList();
   },
   methods: {
     // 获取列表
     async getList(page) {
       let metadata = {};
-      metadata.page = page;
-      metadata.pageSize = this.metadata.paginationParam.pageSize;
-      metadata.status = this.metadata.filter.status;
-      metadata.orgId = this.metadata.filter.orgId;
-      metadata.bkdxType = this.metadata.filter.bkdxType;
-      metadata.bkdxValue = this.metadata.filter.bkdxValue;
-      //   let tableList = await getZnbkList(metadata);
-      //   this.tableList = tableList.data.data.resultSet;
-      //   this.tableList.map(item => {
-      //     let dealNameArr = [];
-      //     if (item.yjjsmjList) {
-      //       item.yjjsmjList.map(items => {
-      //         dealNameArr.push(items.name);
-      //       });
-      //       item.dealName = dealNameArr.join(",");
-      //     }
-      //   });
-      //   this.metadata.paginationParam =
-      //     tableList.data.data.metadata.paginationParam;
+      metadata.page = 1;
+      metadata.pageSize = 10;
+      metadata.productName = this.metadata.filter.productName;
+
+      let tableList = await batchnumberList(metadata);
+      this.tableList = tableList.list;
+      this.metadata.paginationParam.totalCount = tableList.total;
+    },
+    // 获取产品下拉
+    async getProductList() {
+      let metadata = {};
+      metadata.page = 1;
+      metadata.pageSize = 100000;
+      metadata.productName = "";
+      metadata.manufacturer = "";
+
+      let tableList = await productList(metadata);
+      this.productList = tableList.list;
     },
     // 重置
     reset() {
@@ -149,10 +198,7 @@ export default {
           pageSize: 10
         },
         filter: {
-          status: "",
-          orgId: "",
-          bkdxType: "",
-          bkdxValue: ""
+          productName: ""
         }
       };
       this.getList(1);
@@ -165,7 +211,40 @@ export default {
     currentChange(value) {
       this.getList(value);
     },
-    tableChange(val) {},
+    tableChange(val) {
+      this.checkTable = val;
+    },
+    // 批量删除
+    delAll() {
+      this.$confirm("是否确定删除？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        if (this.checkTable.length == 0) {
+          this.$message.warning("至少选择一个商品");
+        } else {
+          let formObj = {};
+          let ids = [];
+          this.checkTable.map(item => {
+            ids.push(item.id);
+          });
+          formObj.ids = ids.join(",");
+
+          batchnumberDelete(formObj).then(res => {
+            if (res == 200) {
+              this.$message({
+                type: "success",
+                message: "删除成功！"
+              });
+              this.reset();
+            } else {
+              this.$message.error("删除失败！");
+            }
+          });
+        }
+      });
+    },
     // 删除
     del(row) {
       this.$confirm("是否确定删除？", "提示", {
@@ -173,8 +252,10 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        delControlFile(row.oid).then(res => {
-          console.log(res);
+        let formObj = {
+          ids: row.id
+        };
+        batchnumberDelete(formObj).then(res => {
           if (res == 200) {
             this.$message({
               type: "success",
@@ -188,11 +269,37 @@ export default {
       });
     },
     // 保存
-    save() {},
+    async save() {
+      if (this.formObj.id) {
+        let status = await batchnumberEdit(this.formObj);
+        if (status == 200) {
+          this.$message({
+            type: "success",
+            message: "保存成功！"
+          });
+          this.dialogFlag = false;
+          this.reset();
+        } else {
+          this.$message.error("保存失败！");
+        }
+      } else {
+        let status = await batchnumberCreate(this.formObj);
+        if (status == 200) {
+          this.$message({
+            type: "success",
+            message: "保存成功！"
+          });
+          this.dialogFlag = false;
+          this.reset();
+        } else {
+          this.$message.error("保存失败！");
+        }
+      }
+    },
     // 编辑
     edit(row) {
       this.dialogTitle = "编辑";
-      this.formObj = row;
+      this.formObj = JSON.parse(JSON.stringify(row));
       this.dialogFlag = true;
     },
     // 关闭清空
@@ -249,6 +356,10 @@ export default {
     .el-page-header {
       margin-bottom: 15px;
     }
+  }
+  /deep/ .el-date-editor.el-input,
+  .el-date-editor.el-input__inner {
+    width: auto;
   }
 }
 </style>

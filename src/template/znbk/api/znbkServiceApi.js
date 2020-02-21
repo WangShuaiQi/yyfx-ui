@@ -413,6 +413,158 @@ export let getIsZhouju = () => {
 }
 
 
+/**
+ * 客户列表
+ * @param 
+ * @returns {Promise}
+ */
+export let customerList = (metadata) => {
+    return new Promise((r, j) => {
+        axios.get("/apis/v1/customer/list",{ params: metadata }).then(d => {
+            console.log(d.data)
+            r(d.data);
+        });
+    })
+}
+/**
+ * 新增编辑客户信息
+ * @param 
+ * @returns {Promise}
+ */
+export let customerCreate = (formObj) => {
+    return new Promise((r, j) => {
+        axios.post("/apis/v1/customer/create",formObj).then(d => {
+            r(d.status);
+        });
+    })
+}
+/**
+ * 删除客户信息
+ * @param 
+ * @returns {Promise}
+ */
+export let customerDelete = (formObj) => {
+    return new Promise((r, j) => {
+        axios.get("/apis/v1/customer/delete",{ params: formObj }).then(d => {
+            console.log(d)
+            r(d.status);
+        });
+    })
+}
+
+/**
+ * 产品列表
+ * @param 
+ * @returns {Promise}
+ */
+export let productList = (metadata) => {
+    return new Promise((r, j) => {
+        axios.get("/apis/v1/product/list",{ params: metadata }).then(d => {
+            r(d.data);
+        });
+    })
+}
+
+/**
+ * 新增产品信息
+ * @param 
+ * @returns {Promise}
+ */
+export let productCreate = (formObj) => {
+    return new Promise((r, j) => {
+        axios.post("/apis/v1/product/create",formObj).then(d => {
+            r(d.status);
+        });
+    })
+}
+
+/**
+ * 编辑产品信息
+ * @param 
+ * @returns {Promise}
+ */
+export let productEdit = (formObj) => {
+    return new Promise((r, j) => {
+        axios.post("/apis/v1/product/edit",formObj).then(d => {
+            r(d.status);
+        });
+    })
+}
+
+/**
+ * 删除产品信息
+ * @param 
+ * @returns {Promise}
+ */
+export let productDelete = (formObj) => {
+    return new Promise((r, j) => {
+        axios.get("/apis/v1/product/delete",{ params: formObj }).then(d => {
+            r(d.status);
+        });
+    })
+}
+
+/**
+ * 批号列表
+ * @param 
+ * @returns {Promise}
+ */
+export let batchnumberList = (metadata) => {
+    return new Promise((r, j) => {
+        axios.get("/apis/v1/batchnumber/list",{ params: metadata }).then(d => {
+            r(d.data);
+        });
+    })
+}
+
+/**
+ * 新增批号信息
+ * @param 
+ * @returns {Promise}
+ */
+export let batchnumberCreate = (formObj) => {
+    return new Promise((r, j) => {
+        axios.post("/apis/v1/batchnumber/create",formObj).then(d => {
+            r(d.status);
+        });
+    })
+}
+
+/**
+ * 编辑批号信息
+ * @param 
+ * @returns {Promise}
+ */
+export let batchnumberEdit = (formObj) => {
+    return new Promise((r, j) => {
+        axios.post("/apis/v1/batchnumber/edit",formObj).then(d => {
+            r(d.status);
+        });
+    })
+}
+
+/**
+ * 删除批号信息
+ * @param 
+ * @returns {Promise}
+ */
+export let batchnumberDelete = (formObj) => {
+    return new Promise((r, j) => {
+        axios.get("/apis/v1/batchnumber/delete",{ params: formObj }).then(d => {
+            r(d.status);
+        });
+    })
+}
+
+
+
+
+
+
+ 
+
+
+
 
 
 
