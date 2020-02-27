@@ -7,15 +7,15 @@
           <el-input v-model="metadata.filter.productName" placeholder="请输入产品名称" size="mini"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" size="mini" @click="dialogFlag=true">新增批号</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" size="mini" @click="delAll">批量删除</el-button>
-        </el-form-item>
-        <el-form-item>
           <el-button type="primary" size="mini" @click="search">搜索</el-button>
         </el-form-item>
       </el-form>
+      <el-form-item>
+        <el-button type="primary" size="mini" @click="dialogFlag=true">新增批号</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" size="mini" @click="delAll">批量删除</el-button>
+      </el-form-item>
     </el-header>
     <el-main>
       <el-table :data="tableList" size="mini" @selection-change="tableChange">

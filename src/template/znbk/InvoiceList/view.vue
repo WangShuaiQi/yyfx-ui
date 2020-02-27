@@ -10,31 +10,31 @@
             <el-row>
               <el-col :span="6">
                 <el-form-item label="公司名称:">
-                  <el-col class="line" :span="24">海王星辰</el-col>
+                  <el-col class="line" :span="24">{{formObj.purchasingUnit}}</el-col>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="公司地址:">
-                  <el-col class="line" :span="24">成都市三环路琉璃立交</el-col>
+                  <el-col class="line" :span="24">{{formObj.recvAdress}}</el-col>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="6">
                 <el-form-item label="开票日期:">
-                  <el-col class="line" :span="24">2020-01-13</el-col>
+                  <el-col class="line" :span="24">{{formObj.createTimeL | formatTime}}</el-col>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="单据编号:">
-                  <el-col class="line" :span="24">XXXXX-XXXX-XXXXX</el-col>
+                  <el-col class="line" :span="24">{{formObj.formId}}</el-col>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="6">
                 <el-form-item label="公司联系电话:">
-                  <el-col class="line" :span="24">15828223645</el-col>
+                  <el-col class="line" :span="24">{{formObj.purchasingUnitTel }}</el-col>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -45,49 +45,53 @@
             <el-row>
               <el-col :span="6">
                 <el-form-item label="发货人:">
-                  <el-col class="line" :span="24">发货人</el-col>
+                  <el-col class="line" :span="24">{{formObj.shipper}}</el-col>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="发货仓库:">
-                  <el-col class="line" :span="24">发货仓库</el-col>
+                  <el-col class="line" :span="24">{{formObj.ck}}</el-col>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="6">
-                <el-form-item label="仓库地址:">
-                  <el-col class="line" :span="24">仓库地址</el-col>
+                <el-form-item label="地址:">
+                  <el-col class="line" :span="24">{{formObj.saleUnitAdress}}</el-col>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="储运条件:">
-                  <el-col class="line" :span="24">储运条件</el-col>
+                  <el-col class="line" :span="24">{{formObj.storageCondition }}</el-col>
                 </el-form-item>
               </el-col>
             </el-row>
           </el-form>
         </el-collapse-item>
         <el-collapse-item title="商品明细" name="商品明细">
-          <el-table :data="tableList" size="mini">
-            <el-table-column label="商品名称" :show-overflow-tooltip="true" prop="name"></el-table-column>
-            <el-table-column label="规格" :show-overflow-tooltip="true" prop="dz"></el-table-column>
-            <el-table-column label="单位" :show-overflow-tooltip="true" prop="dh"></el-table-column>
-            <el-table-column label="生产许可证号" :show-overflow-tooltip="true" prop="ywy"></el-table-column>
-            <el-table-column label="注册证号" :show-overflow-tooltip="true" prop="ywy"></el-table-column>
-            <el-table-column label="生产厂商" :show-overflow-tooltip="true" prop="ywy"></el-table-column>
-            <el-table-column label="生产批号" :show-overflow-tooltip="true" prop="ywy"></el-table-column>
-            <el-table-column label="生产日期" :show-overflow-tooltip="true" prop="ywy"></el-table-column>
-            <el-table-column label="有效期至" :show-overflow-tooltip="true" prop="ywy"></el-table-column>
-            <el-table-column label="数量" :show-overflow-tooltip="true" prop="ywy"></el-table-column>
-            <el-table-column label="单价" :show-overflow-tooltip="true" prop="ywy"></el-table-column>
-            <el-table-column label="金额" :show-overflow-tooltip="true" prop="ywy"></el-table-column>
+          <el-table :data="formObj.productDetail " size="mini">
+            <el-table-column label="商品名称" :show-overflow-tooltip="true" prop="productName"></el-table-column>
+            <el-table-column label="规格" :show-overflow-tooltip="true" prop="productSpecification"></el-table-column>
+            <el-table-column label="单位" :show-overflow-tooltip="true" prop="unit"></el-table-column>
+            <el-table-column label="生产许可证号" :show-overflow-tooltip="true" prop="producingArea"></el-table-column>
+            <el-table-column label="注册证号" :show-overflow-tooltip="true" prop="reginLicence"></el-table-column>
+            <el-table-column label="生产厂商" :show-overflow-tooltip="true" prop="manufacturer"></el-table-column>
+            <el-table-column label="生产批号" :show-overflow-tooltip="true" prop="batchNumber"></el-table-column>
+            <el-table-column label="生产日期" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{scope.row.produceTimeL|formatTime}}</template>
+            </el-table-column>
+            <el-table-column label="有效期至" :show-overflow-tooltip="true">
+              <template slot-scope="scope">{{scope.row.validityTimeL|formatTime}}</template>
+            </el-table-column>
+            <el-table-column label="数量" :show-overflow-tooltip="true" prop="saleNumber"></el-table-column>
+            <el-table-column label="单价" :show-overflow-tooltip="true" prop="unitPrice"></el-table-column>
+            <el-table-column label="金额" :show-overflow-tooltip="true" prop="amountMoneyMount"></el-table-column>
           </el-table>
           <el-form label-width="150px" size="mini" style="margin-top: 15px;">
             <el-row>
               <el-col :span="6">
                 <el-form-item label="合计金额:">
-                  <el-col class="line" :span="24">5000</el-col>
+                  <el-col class="line" :span="24">{{formObj.moneyReceived}}</el-col>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -99,39 +103,32 @@
 </template>
 <script>
 import moment from "moment";
-import { getZnbkList, delControlFile } from "../../znbk/api/znbkServiceApi";
+import { invoiceView,warehouse } from "../../znbk/api/znbkServiceApi";
 export default {
   data() {
     return {
+      formObj: {},
       activeNames: ["购货方信息", "发货信息", "商品明细"],
       tableList: [{ name: "公司名称", dz: "地址", dh: "电话", ywy: "业务员" }]
     };
   },
   mounted() {
-    this.getList(1);
+    this.view();
   },
   methods: {
-    // 获取列表
-    async getList(page) {
-      let metadata = {};
-      //   let tableList = await getZnbkList(metadata);
-      //   this.tableList = tableList.data.data.resultSet;
-      //   this.tableList.map(item => {
-      //     let dealNameArr = [];
-      //     if (item.yjjsmjList) {
-      //       item.yjjsmjList.map(items => {
-      //         dealNameArr.push(items.name);
-      //       });
-      //       item.dealName = dealNameArr.join(",");
-      //     }
-      //   });
-      //   this.metadata.paginationParam =
-      //     tableList.data.data.metadata.paginationParam;
+    async view() {
+      this.formObj = await invoiceView(this.$route.params.id);
+      this.warehouse();
+    },
+    // 获取公司地址
+    async warehouse() {
+      let warehousearr = await warehouse();
+      this.formObj.ck = warehousearr[0].warehouseName;
     },
     // 返回
     goBack() {
       this.$router.push({
-        name: "发货单列表"
+        name: "出货单列表"
       });
     }
   },

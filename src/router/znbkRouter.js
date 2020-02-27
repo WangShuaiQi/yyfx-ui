@@ -36,19 +36,19 @@ export let znbkRouter = [
             },
             {
                 path: "InvoiceList",
-                name: '发货单列表',
+                name: '出货单列表',
                 meta: {
-                    title: '发货单列表',
-                    parents: '发货单列表',
+                    title: '出货单列表',
+                    parents: '出货单列表',
                 },
                 component: () => import('../template/znbk/InvoiceList/index'),
             },
             {
-                path: "InvoiceView",
-                name: '发货单详情',
+                path: "InvoiceView/:id",
+                name: '出货单详情',
                 meta: {
-                    title: '发货单详情',
-                    parents: '发货单列表',
+                    title: '出货单详情',
+                    parents: '出货单列表',
                 },
                 params: {
                     id: ""
@@ -60,7 +60,7 @@ export let znbkRouter = [
                 name: '出货单打印',
                 meta: {
                     title: '出货单打印',
-                    parents: '出货单打印',
+                    parents: '出货单列表',
                 },
                 component: () => import('../template/znbk/InvoiceList/add'),
             },

@@ -15,18 +15,15 @@
   </section>
 </template>
 <script>
+import { getuser } from "../../znbk/api/znbkServiceApi";
+
 export default {
   name: "leftAside",
   data() {
     return {
       routeName: "客户管理",
-      route: [
-        "客户管理",
-        "出货单打印",
-        "产品管理",
-        "批号管理",
-        "发货单列表"
-      ]
+      route: ["客户管理", "产品管理", "批号管理", "出货单列表"],
+      user: {}
     };
   },
   watch: {
@@ -35,10 +32,19 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$route,"111")
     this.routeName = this.$route.meta.parents;
+    this.getuser();
   },
   methods: {
+    // 获取登录用户
+    async getuser() {
+      this.user = await getuser();
+      if (this.user.isAdmin) {
+        this.route = ["客户管理", "产品管理", "批号管理", "出货单列表"];
+      } else {
+        this.route = ["客户管理", "出货单列表"];
+      }
+    },
     menuSelected(routeName) {
       this.$router.push({
         name: routeName

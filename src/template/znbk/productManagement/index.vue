@@ -9,14 +9,14 @@
         <el-form-item label="生产厂商">
           <el-input v-model="metadata.filter.manufacturer" placeholder="请输入生产厂商" size="mini"></el-input>
         </el-form-item>
+         <el-form-item>
+          <el-button type="primary" size="mini" @click="search">搜索</el-button>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" size="mini" @click="dialogFlag=true">新增产品</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="mini" @click="delAll">批量删除</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" size="mini" @click="search">搜索</el-button>
         </el-form-item>
       </el-form>
     </el-header>

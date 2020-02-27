@@ -3,23 +3,23 @@
     <el-header>
       <el-page-header content="客户管理"></el-page-header>
       <el-form ref="filter" :model="metadata.filter" :inline="true">
-        <el-form-item label="业务员">
+        <el-form-item label="业务员" v-if="user.isAdmin">
           <el-input v-model="metadata.filter.createrName" placeholder="请输入业务员行姓名" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="公司名称">
           <el-input v-model="metadata.filter.customerName" placeholder="请输入公司名称" size="mini"></el-input>
         </el-form-item>
+         <el-form-item>
+          <el-button type="primary" size="mini" @click="search">搜索</el-button>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" size="mini" @click="dialogFlag=true">新增客户</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" size="mini" @click="delAll">批量删除</el-button>
+          <el-button type="primary" size="mini" @click="delAll" v-if="user.isAdmin">批量删除</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" size="mini" @click="search">搜索</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" size="mini">导出客户信息</el-button>
+          <el-button type="primary" size="mini" @click="download">导出客户信息</el-button>
         </el-form-item>
       </el-form>
     </el-header>
@@ -33,7 +33,7 @@
         <el-table-column label="操作" v-if="true">
           <template slot-scope="scope">
             <el-button size="mini" type="text" @click="edit(scope.row)">编辑</el-button>
-            <el-button size="mini" type="text" @click="del(scope.row)">删除</el-button>
+            <el-button size="mini" type="text" @click="del(scope.row)" v-if="user.isAdmin">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -57,13 +57,13 @@
           style="text-align: center;"
         >
           <el-form-item label="公司名称">
-            <el-input v-model="formObj.name" size="mini"></el-input>
+            <el-input v-model="formObj.name" size="mini" placeholder="请输入公司名称" ></el-input>
           </el-form-item>
           <el-form-item label="电话">
-            <el-input v-model="formObj.tel" size="mini"></el-input>
+            <el-input v-model="formObj.tel" size="mini" placeholder="请输入电话"></el-input>
           </el-form-item>
           <el-form-item label="地址">
-            <el-input v-model="formObj.address" size="mini"></el-input>
+            <el-input v-model="formObj.address" size="mini"  placeholder="请输入地址"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -77,6 +77,7 @@
 <script>
 import moment from "moment";
 import {
+  getuser,
   customerList,
   customerCreate,
   customerDelete
@@ -99,13 +100,19 @@ export default {
       tableList: [],
       checkTable: [],
       dialogTitle: "新增",
-      dialogFlag: false
+      dialogFlag: false,
+      user: {}
     };
   },
   mounted() {
     this.getList(1);
+    this.getuser();
   },
   methods: {
+    // 获取登录用户
+    async getuser() {
+      this.user = await getuser();
+    },
     // 获取列表
     async getList(page) {
       let metadata = {};
@@ -221,6 +228,11 @@ export default {
     clientClosed() {
       this.dialogTitle = "新增";
       this.formObj = {};
+    },
+    // 下载
+    download(){
+      window.open('/apis/v1/customer/downloadFile/?token='+sessionStorage.getItem('token'));
+
     }
   },
   filters: {
