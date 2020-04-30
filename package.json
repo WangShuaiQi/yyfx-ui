@@ -27,7 +27,7 @@
     "element-ui": "^2.0.1",
     "font-awesome": "^4.7.0",
     "html2canvas":"1.0.0-alpha.12",
-    "jquery": "^2.2.4",
+    "jquery": "^3.5.0",
     "moment": "^2.19.1",
     "node-sass": "^4.11.0",
     "popper.js": "^1.14.3",
