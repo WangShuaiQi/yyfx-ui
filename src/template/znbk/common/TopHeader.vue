@@ -1,21 +1,24 @@
 <template>
   <section id="topHeader">
     <div class="left">
-        <span>成都赞美医药销量分析系统</span>
+      <span>成都赞美医药销量分析系统</span>
     </div>
     <div class="right">
-        <div></div> 
-        <span @click="exit"><i class="fa fa-power-off"></i></span>
+      <div></div>
+      <span @click="exit">
+        <i class="fa fa-power-off"></i>
+      </span>
     </div>
   </section>
 </template>
 
 <script>
+import kcAuth from '../../../utils/kcAuth'
 export default {
   name: "TopHeader",
   methods: {
-    exit() {
-      window.open("http://80.205.2.199:7070/", "_self");
+    async exit() {
+     window.kc.logout();
     }
   }
 };

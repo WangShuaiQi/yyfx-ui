@@ -103,11 +103,22 @@
 </template>
 <script>
 import moment from "moment";
-import { invoiceView,warehouse } from "../../znbk/api/znbkServiceApi";
+import { invoiceView, warehouse } from "../../znbk/api/znbkServiceApi";
 export default {
   data() {
     return {
-      formObj: {},
+      formObj: {
+        purchasingUnit: "",
+        recvAdress: "",
+        createTimeL: "",
+        formId: "",
+        purchasingUnitTel: "",
+        shipper: "",
+        ck: "",
+        saleUnitAdress: "",
+        storageCondition: "",
+        moneyReceived: ""
+      },
       activeNames: ["购货方信息", "发货信息", "商品明细"],
       tableList: [{ name: "公司名称", dz: "地址", dh: "电话", ywy: "业务员" }]
     };
@@ -117,7 +128,9 @@ export default {
   },
   methods: {
     async view() {
-      this.formObj = await invoiceView(this.$route.params.id);
+      let form = await invoiceView(this.$route.params.id);
+      form.ck = "";
+      this.formObj = form;
       this.warehouse();
     },
     // 获取公司地址

@@ -113,7 +113,7 @@ export default {
       metadata.endtTime = this.metadata.filter.endtTime;
       metadata.company = this.metadata.filter.company;
       metadata.productName = this.metadata.filter.productName;
-      metadata.status = this.metadata.filter.status;
+      metadata.shipper = this.metadata.filter.shipper;
 
       let tableList = await invoiceList(metadata);
       this.tableList = tableList.list;

@@ -12,7 +12,22 @@
           <el-row>
             <el-col :span="6">
               <el-form-item label="购货单位">
-                <el-input v-model="formObj.purchasingUnit "></el-input>
+                <!-- <el-input v-model="formObj.purchasingUnit "></el-input> -->
+                <el-select
+                  value-key="name"
+                  v-model="formObj.purchasingUnit"
+                  placeholder="请回车搜索"
+                  size="mini"
+                  filterable
+                  @change="purchasingUnitChange"
+                >
+                  <el-option
+                    v-for="item in select.customerList"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item"
+                  ></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -57,8 +72,9 @@
                   <template slot-scope="scope">
                     <el-select
                       v-model="scope.row.productName"
-                      placeholder="请选择"
+                      placeholder="请回车搜索"
                       size="mini"
+                      filterable
                       @change="getProductSpecification(scope.row,scope.$index)"
                     >
                       <el-option
@@ -95,6 +111,7 @@
                   <template slot-scope="scope">
                     <el-select
                       v-model="scope.row.batchNumber"
+                      value-key="batchId"
                       placeholder="请选择"
                       size="mini"
                       @change="batchNumberChange(scope.row,scope.$index)"
@@ -102,8 +119,8 @@
                       <el-option
                         v-for="item in select.batchNumberArr[scope.$index].batchNumber"
                         :key="item.id "
-                        :label="item.batchId "
-                        :value="item.batchId "
+                        :label="item.batchId"
+                        :value="item "
                       ></el-option>
                     </el-select>
                   </template>
@@ -159,7 +176,7 @@
           <el-row>
             <el-col :span="6">
               <span class="key">第一联:</span>
-              <span>财物记帐(白)</span>
+              <span>财务记帐(白)</span>
             </el-col>
             <el-col :span="6">
               <span class="key">第二联:</span>
@@ -177,7 +194,20 @@
           <el-row>
             <el-col :span="6">
               <el-form-item label="制单">
-                <el-input v-model="formObj.formCreator"></el-input>
+                <el-select
+                  value-key="name"
+                  v-model="formObj.formCreator"
+                  placeholder="请回车搜索"
+                  size="mini"
+                  filterable
+                >
+                  <el-option
+                    v-for="(item,index) in select.formMaker"
+                    :key="index"
+                    :label="item"
+                    :value="item"
+                  ></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -219,174 +249,172 @@
             style="font-size: 34px; display: block; margin-bottom: 20px"
           >成都赞美生物科技有限公司随货同行单</el-col>
         </el-row>
-        <el-form :inline="true" size="mini">
-          <el-row>
-            <el-col :span="6">
-              <span class="key">购货单位:</span>
-              <span>{{formObj.purchasingUnit}}</span>
-            </el-col>
-            <el-col :span="6" :offset="7">
-              <span class="key">收货地址:</span>
-              <span>{{formObj.recvAdress}}</span>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6">
-              <span class="key">出库时间:</span>
-              <span>{{formObj.outStoreTimeL |formatTime}}</span>
-            </el-col>
-            <el-col :span="7">
-              <span class="key">单据编号:</span>
-              <span>{{formObj.formId }}</span>
-            </el-col>
-            <el-col :span="5">
-              <span class="key">联系电话:</span>
-              <span>{{formObj.purchasingUnitTel}}</span>
-            </el-col>
-            <el-col :span="4">
-              <span class="key">储运条件:</span>
-              <span>{{formObj.entrepotName}}</span>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <table class="myTable" style="font-size: 16px;" cellspacing="0" cellpadding="0">
-                <thead>
-                  <tr>
-                    <th>
-                      <div>商品名称</div>
-                    </th>
-                    <th>
-                      <div>规格</div>
-                    </th>
-                    <th>
-                      <div>单位</div>
-                    </th>
-                    <th>
-                      <div>生产许可证号</div>
-                    </th>
-                    <th>
-                      <div>注册证号</div>
-                    </th>
-                    <th>
-                      <div>生产厂商</div>
-                    </th>
-                    <th>
-                      <div>生产批号</div>
-                    </th>
-                    <th>
-                      <div>生产日期</div>
-                    </th>
-                    <th>
-                      <div>有效期至</div>
-                    </th>
-                    <th>
-                      <div>数量</div>
-                    </th>
-                    <th>
-                      <div>单价</div>
-                    </th>
-                    <th>
-                      <div>金额</div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item,index) in  tableList" :key="index">
-                    <td>
-                      <div>{{item.productName}}</div>
-                    </td>
-                    <td>
-                      <div>{{item.productSpecification}}</div>
-                    </td>
-                    <td>
-                      <div>{{item.unit}}</div>
-                    </td>
-                    <td>
-                      <div>{{item.producingArea}}</div>
-                    </td>
-                    <td>
-                      <div>{{item.reginLicence}}</div>
-                    </td>
-                    <td>
-                      <div>{{item.manufacturer}}</div>
-                    </td>
-                    <td>
-                      <div>{{item.batchNumber}}</div>
-                    </td>
-                    <td>
-                      <div>{{item.produceTimeL |formatTime1}}</div>
-                    </td>
-                    <td>
-                      <div>{{item.validityTimeL |formatTime1}}</div>
-                    </td>
-                    <td>
-                      <div>{{item.saleNumber}}</div>
-                    </td>
-                    <td>
-                      <div>{{item.unitPrice}}</div>
-                    </td>
-                    <td>
-                      <div>{{item.amountMoneyMount}}</div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </el-col>
-          </el-row>
-          <el-row style>
-            <el-col :span="6">
-              <span class="key">合计金额:</span>
-              <span>{{formObj.moneyReceived}}</span>
-            </el-col>
-            <el-col :span="6" :offset="6">
-              <span class="key">合计金额大写:</span>
-              <span>{{formObj.sumRecevied}}</span>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6">
-              <span class="key">第一联:</span>
-              <span>财物记帐(白)</span>
-            </el-col>
-            <el-col :span="6">
-              <span class="key">第二联:</span>
-              <span>结算（粉）</span>
-            </el-col>
-            <el-col :span="6">
-              <span class="key">第三联:</span>
-              <span>客户（蓝）</span>
-            </el-col>
-            <el-col :span="6">
-              <span class="key">第四联:</span>
-              <span>存根（黄）</span>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6">
-              <span class="key">制单:</span>
-              <span>{{formObj.formCreator}}</span>
-            </el-col>
-            <el-col :span="6">
-              <span class="key">出库复核:</span>
-              <span>{{formObj.outEntrepotCheck}}</span>
-            </el-col>
-            <el-col :span="6">
-              <span class="key">发货人:</span>
-              <span>{{formObj.shipper}}</span>
-            </el-col>
-            <el-col :span="6">
-              <span class="key">收货人:</span>
-              <span>{{formObj.consignee}}</span>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <span class="key">地址:</span>
-              <span>{{formObj.saleUnitAdress}}</span>
-            </el-col>
-          </el-row>
-        </el-form>
+        <el-row style=" margin-top: 5px;">
+          <el-col :span="13">
+            <span class="key">购货单位:</span>
+            <span>{{formObj.purchasingUnit}}</span>
+          </el-col>
+          <el-col :span="11">
+            <span class="key">收货地址:</span>
+            <span>{{formObj.recvAdress}}</span>
+          </el-col>
+        </el-row>
+        <el-row style=" margin-top: 5px;">
+          <el-col :span="6">
+            <span class="key">出库时间:</span>
+            <span>{{formObj.outStoreTimeL |formatTime}}</span>
+          </el-col>
+          <el-col :span="7">
+            <span class="key">单据编号:</span>
+            <span>{{formObj.formId }}</span>
+          </el-col>
+          <el-col :span="5">
+            <span class="key">联系电话:</span>
+            <span>{{formObj.purchasingUnitTel}}</span>
+          </el-col>
+          <el-col :span="4">
+            <span class="key">储运条件:</span>
+            <span>{{formObj.storageCondition}}</span>
+          </el-col>
+        </el-row>
+        <el-row style=" margin-top: 5px;">
+          <el-col :span="24">
+            <table class="myTable" style="font-size: 16px;" cellspacing="0" cellpadding="0">
+              <thead>
+                <tr>
+                  <th>
+                    <div style="padding: 5px 0;">商品名称</div>
+                  </th>
+                  <th>
+                    <div style="padding: 5px 0;">规格</div>
+                  </th>
+                  <th>
+                    <div style="padding: 5px 0;">单位</div>
+                  </th>
+                  <th>
+                    <div style="padding: 5px 0;">生产许可证号</div>
+                  </th>
+                  <th>
+                    <div style="padding: 5px 0;">注册证号</div>
+                  </th>
+                  <th>
+                    <div style="padding: 5px 0;">生产厂商</div>
+                  </th>
+                  <th>
+                    <div style="padding: 5px 0;">生产批号</div>
+                  </th>
+                  <th>
+                    <div style="padding: 5px 0;">生产日期</div>
+                  </th>
+                  <th>
+                    <div style="padding: 5px 0;">有效期至</div>
+                  </th>
+                  <th>
+                    <div style="padding: 5px 0;">数量</div>
+                  </th>
+                  <th>
+                    <div style="padding: 5px 0;">单价</div>
+                  </th>
+                  <th>
+                    <div style="padding: 5px 0;">金额</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item,index) in  tableList" :key="index">
+                  <td>
+                    <div style="padding: 5px 0;">{{item.productName}}</div>
+                  </td>
+                  <td>
+                    <div style="padding: 5px 0;">{{item.productSpecification}}</div>
+                  </td>
+                  <td>
+                    <div style="padding: 5px 0;">{{item.unit}}</div>
+                  </td>
+                  <td>
+                    <div style="padding: 5px 0;">{{item.producingArea}}</div>
+                  </td>
+                  <td>
+                    <div style="padding: 5px 0;">{{item.reginLicence}}</div>
+                  </td>
+                  <td>
+                    <div style="padding: 5px 0;">{{item.manufacturer}}</div>
+                  </td>
+                  <td>
+                    <div style="padding: 5px 0;">{{item.batchNumber}}</div>
+                  </td>
+                  <td>
+                    <div style="padding: 5px 0;">{{item.produceTimeL |formatTime1}}</div>
+                  </td>
+                  <td>
+                    <div style="padding: 5px 0;">{{item.validityTimeL |formatTime1}}</div>
+                  </td>
+                  <td>
+                    <div style="padding: 5px 0;">{{item.saleNumber}}</div>
+                  </td>
+                  <td>
+                    <div style="padding: 5px 0;">{{item.unitPrice}}</div>
+                  </td>
+                  <td>
+                    <div style="padding: 5px 0;">{{item.amountMoneyMount}}</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </el-col>
+        </el-row>
+        <el-row style=" margin-top: 5px;">
+          <el-col :span="12">
+            <span class="key">合计金额:</span>
+            <span>{{formObj.moneyReceived}}</span>
+          </el-col>
+          <el-col :span="12">
+            <span class="key">合计金额大写:</span>
+            <span>{{formObj.sumRecevied}}</span>
+          </el-col>
+        </el-row>
+        <el-row style=" margin-top: 5px;">
+          <el-col :span="6">
+            <span class="key">第一联:</span>
+            <span>财务记帐(白)</span>
+          </el-col>
+          <el-col :span="6">
+            <span class="key">第二联:</span>
+            <span>结算（粉）</span>
+          </el-col>
+          <el-col :span="6">
+            <span class="key">第三联:</span>
+            <span>客户（蓝）</span>
+          </el-col>
+          <el-col :span="6">
+            <span class="key">第四联:</span>
+            <span>存根（黄）</span>
+          </el-col>
+        </el-row>
+        <el-row style=" margin-top: 5px;">
+          <el-col :span="6">
+            <span class="key">制单:</span>
+            <span>{{formObj.formCreator}}</span>
+          </el-col>
+          <el-col :span="6">
+            <span class="key">出库复核:</span>
+            <span>{{formObj.outEntrepotCheck}}</span>
+          </el-col>
+          <el-col :span="6">
+            <span class="key">发货人:</span>
+            <span>{{formObj.shipper}}</span>
+          </el-col>
+          <el-col :span="6">
+            <span class="key">收货人:</span>
+            <span>{{formObj.consignee}}</span>
+          </el-col>
+        </el-row>
+        <el-row style=" margin-top: 5px;">
+          <el-col :span="24">
+            <span class="key">地址:</span>
+            <span>{{formObj.saleUnitAdress}}</span>
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
     <!--endprint1-->
@@ -402,26 +430,42 @@ import {
   productPh,
   getStorageCondition,
   warehouse,
-  getuser
+  getuser,
+  customerList,
+  getFormMaker,
+  getLastPrice
 } from "../../znbk/api/znbkServiceApi";
 export default {
   data() {
     return {
-      formObj: {},
+      formObj: {
+        purchasingUnit: "",
+        recvAdress: "",
+        outStoreTimeL: new Date().getTime(),
+        formId: "",
+        purchasingUnitTel: "",
+        storageCondition: "阴凉",
+        moneyReceived: "",
+        sumRecevied: "",
+        formCreator: "",
+        outEntrepotCheck: "",
+        shipper: "",
+        saleUnitAdress: ""
+      },
       tableList: [
         {
-          productName: "张张张张张张张张张张张",
-          productSpecification: "10ml",
-          unit: "张张",
-          producingArea: "(豫)卫消证字(2014)第0054号",
-          reginLicence: "(豫)卫消证字(2014)第0054号",
-          manufacturer: "张张张张张张",
-          batchNumber: "20200118",
-          produceTimeL: "2020-01-18",
-          validityTimeL: "2020-01-18",
-          saleNumber: 12345,
-          unitPrice: 1234.56,
-          amountMoneyMount: 123456.78
+          productName: "",
+          productSpecification: "",
+          unit: "",
+          producingArea: "",
+          reginLicence: "",
+          manufacturer: "",
+          batchNumber: "",
+          produceTimeL: "",
+          validityTimeL: "",
+          saleNumber: 0,
+          unitPrice: 0.0,
+          amountMoneyMount: 0.0
         },
         {
           productName: "",
@@ -455,6 +499,8 @@ export default {
       select: {
         productName: [],
         storageCondition: [],
+        customerList: [],
+        formMaker: [],
         productSpecificationArr: [
           {
             productSpecification: []
@@ -479,6 +525,8 @@ export default {
     this.getStorageCondition();
     this.warehouse();
     this.getuser();
+    this.getcontrol();
+    this.getFormMaker();
   },
   watch: {
     tableList() {
@@ -491,6 +539,24 @@ export default {
       let user = await getuser();
       this.formObj.shipper = user.userName;
     },
+    // 获取客户
+    async getcontrol() {
+      let metadata = {};
+      metadata.page = 1;
+      metadata.pageSize = 100000;
+
+      let tableList = await customerList(metadata);
+      this.select.customerList = tableList.list;
+    },
+    purchasingUnitChange(value) {
+      this.formObj.purchasingUnit = value.name;
+      this.formObj.recvAdress = value.address;
+      this.formObj.purchasingUnitTel = value.tel;
+    },
+    async getFormMaker() {
+      this.select.formMaker = await getFormMaker();
+      this.formObj.formCreator = this.select.formMaker[0];
+    },
     // 获取公司地址
     async warehouse() {
       let warehousearr = await warehouse();
@@ -498,10 +564,10 @@ export default {
       // this.getuser();
     },
     // 获取产品列表
-    async getList(page) {
+    async getList() {
       let metadata = {};
       metadata.page = 1;
-      metadata.pageSize = 10;
+      metadata.pageSize = 100000;
       metadata.productName = "";
       metadata.manufacturer = "";
 
@@ -516,12 +582,19 @@ export default {
     async getProductSpecification(row, index) {
       let obj = {};
       obj.productName = row.productName;
+
       this.select.productSpecificationArr[
         index
       ].productSpecification = await productGg(obj);
+
+      row.productSpecification = this.select.productSpecificationArr[
+        index
+      ].productSpecification[0].standard;
+
       row.producingArea = this.select.productSpecificationArr[
         index
       ].productSpecification[0].produceLicence;
+
       row.unit = this.select.productSpecificationArr[
         index
       ].productSpecification[0].unit;
@@ -529,12 +602,15 @@ export default {
       row.reginLicence = this.select.productSpecificationArr[
         index
       ].productSpecification[0].reginLicence;
+
       row.manufacturer = this.select.productSpecificationArr[
         index
       ].productSpecification[0].manufacturer;
+
       row.manufacturer = this.select.productSpecificationArr[
         index
       ].productSpecification[0].manufacturer;
+      this.getProductSpecificationChange(row, index);
     },
     // 获取编号
     async getProductSpecificationChange(row, index) {
@@ -543,25 +619,30 @@ export default {
       obj.productStandard = row.productSpecification;
 
       this.select.batchNumberArr[index].batchNumber = await productPh(obj);
+      if (this.formObj.purchasingUnit == "") {
+        this.$message.warning('请选择购货单位并重新选择商品以获取单价');
+      } else {
+        let lastPriceObj = {
+          productName: row.productName,
+          standard: row.productSpecification,
+          customerName: this.formObj.purchasingUnit
+        };
+
+        let unitPrice = await getLastPrice(lastPriceObj);
+        if (typeof unitPrice != "object") {
+          row.unitPrice = unitPrice;
+        } else {
+          row.unitPrice = 0.0;
+        }
+      }
     },
     // 获取其他数据
     batchNumberChange(row, index) {
-      let _this = this;
-      let ar = this.select.batchNumberArr[index].batchNumber.find(function(
-        elem
-      ) {
-        return elem.batchId == _this.tableList[index].batchNumber;
-      });
-
-      row.produceTimeL = this.select.batchNumberArr[
-        index
-      ].batchNumber[0].produceTimeL;
-      row.validityTimeL = this.select.batchNumberArr[
-        index
-      ].batchNumber[0].validityTimeL;
-      row.saleNumber = this.select.batchNumberArr[
-        index
-      ].batchNumber[0].productCount;
+      let batchNumber = JSON.parse(JSON.stringify(row.batchNumber));
+      row.produceTimeL = batchNumber.produceTimeL;
+      row.validityTimeL = batchNumber.validityTimeL;
+      row.saleNumber = batchNumber.productCount||0;
+      row.batchNumber = batchNumber.batchId;
     },
     // 合计
     getAmountMoneyMount(row, index) {
@@ -572,6 +653,7 @@ export default {
         Number(this.tableList[0].amountMoneyMount) +
         Number(this.tableList[1].amountMoneyMount) +
         Number(this.tableList[2].amountMoneyMount);
+      this.formObj.moneyReceived = this.getFloatStr(this.formObj.moneyReceived);
       this.formObj.sumRecevied = this.changeMoneyToChinese(
         Number(this.formObj.moneyReceived)
       );
@@ -682,6 +764,7 @@ export default {
     // 打印新增
     printdata() {
       let formObj = {};
+      console.log(this.formObj);
       invoiceCode().then(res => {
         this.formObj.formId = res;
         let obj = JSON.parse(JSON.stringify(this.formObj));
@@ -770,7 +853,7 @@ window.onafterprint = afterPrint;
 #template {
   // width: 21.7cm;
   width: 100%;
-  height: 9.2cm;
+  // height: 9.2cm;
   display: none;
   .el-row {
     margin-top: 5px;

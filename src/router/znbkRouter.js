@@ -1,20 +1,20 @@
-export let znbkRouter = [
-    {
+export let znbkRouter = [{
         path: "/",
         meta: {
-            title: '智能布控',
+            title: '医药分析',
         },
         redirect: '/customerManagement',
-        component: () => import('../template/layout/LayoutZnbk'),
-        children: [
-            {
+        component: () =>
+            import ('../template/layout/LayoutZnbk'),
+        children: [{
                 path: "customerManagement",
                 name: '客户管理',
                 meta: {
                     title: '客户管理',
                     parents: '客户管理',
                 },
-                component: () => import('../template/znbk/customerManagement/index'),
+                component: () =>
+                    import ('../template/znbk/customerManagement/index'),
             },
             {
                 path: "productManagement",
@@ -23,7 +23,8 @@ export let znbkRouter = [
                     title: '产品管理',
                     parents: '产品管理',
                 },
-                component: () => import('../template/znbk/productManagement/index'),
+                component: () =>
+                    import ('../template/znbk/productManagement/index'),
             },
             {
                 path: "lotNumberManagement",
@@ -32,7 +33,8 @@ export let znbkRouter = [
                     title: '批号管理',
                     parents: '批号管理',
                 },
-                component: () => import('../template/znbk/lotNumberManagement/index'),
+                component: () =>
+                    import ('../template/znbk/lotNumberManagement/index'),
             },
             {
                 path: "InvoiceList",
@@ -41,7 +43,8 @@ export let znbkRouter = [
                     title: '出货单列表',
                     parents: '出货单列表',
                 },
-                component: () => import('../template/znbk/InvoiceList/index'),
+                component: () =>
+                    import ('../template/znbk/InvoiceList/index'),
             },
             {
                 path: "InvoiceView/:id",
@@ -53,7 +56,8 @@ export let znbkRouter = [
                 params: {
                     id: ""
                 },
-                component: () => import('../template/znbk/InvoiceList/view'),
+                component: () =>
+                    import ('../template/znbk/InvoiceList/view'),
             },
             {
                 path: "invoiceAdd",
@@ -62,125 +66,9 @@ export let znbkRouter = [
                     title: '出货单打印',
                     parents: '出货单列表',
                 },
-                component: () => import('../template/znbk/InvoiceList/add'),
+                component: () =>
+                    import ('../template/znbk/InvoiceList/add'),
             },
-            {
-                path: "controlFileList",
-                name: '布控档案列表',
-                meta: {
-                    title: '布控档案列表',
-                    parents: '布控档案列表',
-                },
-                component: () => import('../template/znbk/controlFile/controlFileList'),
-            },
-            {
-                path: "controlFileApprovalForm",
-                name: '发起布控',
-                meta: {
-                    title: '发起布控',
-                    parents: '布控档案列表',
-                },
-                component: () => import('../template/znbk/controlFile/controlFileApprovalForm')
-            },
-            {
-                path: "controlFileRequisition",
-                name: '发起续控',
-                meta: {
-                    title: '发起续控',
-                    parents: '布控档案列表',
-                },
-                component: () => import('../template/znbk/controlFile/controlFileRequisition')
-            },
-            {
-                path: "cancleControlFile",
-                name: '发起撤控',
-                meta: {
-                    title: '发起撤控',
-                    parents: '布控档案列表',
-                },
-                component: () => import('../template/znbk/controlFile/cancleControlFile')
-            },
-            {
-                path: "addControlFile",
-                name: '创建布控档案',
-                meta: {
-                    title: '创建布控档案',
-                    parents: '布控档案列表',
-                },
-                component: () => import('../template/znbk/controlFile/addControlFile')
-            },
-            {
-                path: "moveControlFile",
-                name: '补全多维档案',
-                meta: {
-                    title: '补全多维档案',
-                    parents: '布控档案列表',
-                },
-                component: () => import('../template/znbk/controlFile/moveControlFile')
-            },
-            {
-                path: "batchCreation",
-                name: '批量创建布控档案',
-                meta: {
-                    title: '批量创建布控档案',
-                    parents: '布控档案列表',
-                },
-                component: () => import('../template/znbk/controlFile/batchCreation')
-            },
-            {
-                path: "viewControlFile/:id",
-                name: '查看多维档案',
-                meta: {
-                    title: '查看多维档案',
-                    parents: '布控档案列表',
-                },
-                params: {
-                    id: ""
-                },
-                component: () => import('../template/znbk/controlFile/viewControlFile')
-            },
-            {
-                path: "editControlFile/:id",
-                name: '编辑多维档案',
-                meta: {
-                    title: '编辑多维档案',
-                    parents: '布控档案列表',
-                },
-                params: {
-                    id: ""
-                },
-                component: () => import('../template/znbk/controlFile/editControlFile')
-            },
-            {
-                path: "initiateControlFile",
-                name: '已发起的布控',
-                meta: {
-                    title: '已发起的布控',
-                    parents: '已发起的布控',
-                },
-                component: () => import('../template/znbk/controlFile/initiateControlFile'),
-                children: []
-            },
-            {
-                path: "approvalControlFile",
-                name: '待审批的布控',
-                meta: {
-                    title: '待审批的布控',
-                    parents: '待审批的布控',
-                },
-                component: () => import('../template/znbk/controlFile/approvalControlFile'),
-                children: [
-                    {
-                        path: "controlFileRequisition",
-                        name: '我的布控审批单',
-                        meta: {
-                            title: '我的布控审批单',
-                            parents: '待审批的布控',
-                        },
-                        component: () => import('../template/znbk/controlFile/controlFileRequisition')
-                    }
-                ]
-            }
         ]
     },
     {
@@ -188,7 +76,8 @@ export let znbkRouter = [
         meta: {
             title: '404',
         },
-        component: () => import('../template/404')
+        component: () =>
+            import ('../template/404')
     },
     {
         path: '*',

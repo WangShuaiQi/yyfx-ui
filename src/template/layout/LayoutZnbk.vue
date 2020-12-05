@@ -46,7 +46,7 @@ export default {
     width: 100%;
   }
   .el-main {
-    height: calc(100% - 30px);
+    height: calc(100% - 60px);
     width: 100%;
   }
   .el-aside {

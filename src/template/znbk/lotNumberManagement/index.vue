@@ -9,13 +9,13 @@
         <el-form-item>
           <el-button type="primary" size="mini" @click="search">搜索</el-button>
         </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="mini" @click="dialogFlag=true">新增批号</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="mini" @click="delAll">批量删除</el-button>
+        </el-form-item>
       </el-form>
-      <el-form-item>
-        <el-button type="primary" size="mini" @click="dialogFlag=true">新增批号</el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" size="mini" @click="delAll">批量删除</el-button>
-      </el-form-item>
     </el-header>
     <el-main>
       <el-table :data="tableList" size="mini" @selection-change="tableChange">
@@ -177,6 +177,7 @@ export default {
 
       let tableList = await batchnumberList(metadata);
       this.tableList = tableList.list;
+      console.log(this.tableList, "111");
       this.metadata.paginationParam.totalCount = tableList.total;
     },
     // 获取产品下拉

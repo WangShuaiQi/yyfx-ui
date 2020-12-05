@@ -28,7 +28,7 @@ window.$ = window.jQuery = jQuery;
 // 全局处理Promise的问题,es2015
 window.Promise = Promise;
 //处理es2015数据方法bug
-Array.prototype.includes == null && (Array.prototype.includes = function (val) { return this.indexOf(val) >= 0 });
+Array.prototype.includes == null && (Array.prototype.includes = function(val) { return this.indexOf(val) >= 0 });
 // 引入lodash方法库
 let _ = require('lodash');
 Vue.prototype._ = _;
@@ -42,12 +42,14 @@ axios.defaults.withCredentials = true;
 /**
  * 这里闭包执行keycloak认证;
  */
-(async ()=>{
+(async() => {
     console.log("keycloak start", window.location.origin)
     let kc = await kcAuth.getKeyCloak(window.location.origin + "/static/keycloak/keycloak.json")
+    window.kc = kc
     Vue.prototype.$kc = kc
     let authed = await kcAuth.reqtoken(kc)
     console.log("keycloak", authed, kc)
+    debugger
     if (authed) {
         // let userInfo = await kcAuth.getUpmsUserInfo(kc, authed); //获取加载的用户信息
         new Vue({
@@ -65,7 +67,7 @@ axios.defaults.withCredentials = true;
 /**
  * 注册接口加载监听,实现加载的效果
  */
-axios.interceptors.request.use(function (req) {
+axios.interceptors.request.use(function(req) {
     loadingMask.start();
     let token = sessionStorage.getItem("token");
     if (token) {
@@ -73,7 +75,7 @@ axios.interceptors.request.use(function (req) {
     }
     req.timeout = 1000 * 60;
     return req;
-}, function (error) {
+}, function(error) {
     return Promise.reject(error);
 });
 

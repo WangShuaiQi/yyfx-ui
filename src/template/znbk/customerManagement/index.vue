@@ -9,7 +9,7 @@
         <el-form-item label="公司名称">
           <el-input v-model="metadata.filter.customerName" placeholder="请输入公司名称" size="mini"></el-input>
         </el-form-item>
-         <el-form-item>
+        <el-form-item>
           <el-button type="primary" size="mini" @click="search">搜索</el-button>
         </el-form-item>
         <el-form-item>
@@ -57,13 +57,13 @@
           style="text-align: center;"
         >
           <el-form-item label="公司名称">
-            <el-input v-model="formObj.name" size="mini" placeholder="请输入公司名称" ></el-input>
+            <el-input v-model="formObj.name" size="mini" placeholder="请输入公司名称"></el-input>
           </el-form-item>
           <el-form-item label="电话">
             <el-input v-model="formObj.tel" size="mini" placeholder="请输入电话"></el-input>
           </el-form-item>
           <el-form-item label="地址">
-            <el-input v-model="formObj.address" size="mini"  placeholder="请输入地址"></el-input>
+            <el-input v-model="formObj.address" size="mini" placeholder="请输入地址"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -116,7 +116,7 @@ export default {
     // 获取列表
     async getList(page) {
       let metadata = {};
-      metadata.page = 1;
+      metadata.page = page;
       metadata.pageSize = 10;
       metadata.customerName = this.metadata.filter.customerName;
       metadata.createrName = this.metadata.filter.createrName;
@@ -206,16 +206,21 @@ export default {
     },
     // 保存
     async save() {
-      let status = await customerCreate(this.formObj);
-      if (status == 200) {
-        this.$message({
-          type: "success",
-          message: "保存成功！"
-        });
-        this.dialogFlag = false;
-        this.reset();
-      } else {
-        this.$message.error("保存失败！");
+      if (this.formObj.address != "") {
+        let status = await customerCreate(this.formObj);
+        console.log(status)
+        if (status.code == 200) {
+          this.$message({
+            type: "success",
+            message: "保存成功！"
+          });
+          this.dialogFlag = false;
+          this.reset();
+        } else {
+          this.$message.error(status.msg);
+        }
+      }else{
+        this.$message.warning("请添加收货地址");
       }
     },
     // 编辑
@@ -230,9 +235,11 @@ export default {
       this.formObj = {};
     },
     // 下载
-    download(){
-      window.open('/apis/v1/customer/downloadFile/?token='+sessionStorage.getItem('token'));
-
+    download() {
+      window.open(
+        "/apis/v1/customer/downloadFile/?token=" +
+          sessionStorage.getItem("token")
+      );
     }
   },
   filters: {

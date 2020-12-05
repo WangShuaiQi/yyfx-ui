@@ -1,10 +1,12 @@
 {
-  "realm": "master",
-  "auth-server-url": "http://172.16.1.250:8080/auth",
-  "ssl-required": "external",
-  "resource": "zhili",
-  "credentials": {
-    "secret": "b4d6652d-46ce-4cfe-8ba7-594a6495de5f"
-  },
-  "policy-enforcer": {}
+    "realm": "master",
+    "auth-server-url": "http://47.108.151.18:8080/auth/",
+    "ssl-required": "none",
+    "resource": "upms-client",
+    "verify-token-audience": true,
+    "credentials": {
+        "secret": "399bbaa4-314e-45af-b519-66c2dfd4acdc"
+    },
+    "confidential-port": 0,
+    "policy-enforcer": {}
 }
