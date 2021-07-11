@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-(function( window, undefined ) {
+(function(window, undefined) {
 
-    var Keycloak = function (config) {
+    var Keycloak = function(config) {
         if (!(this instanceof Keycloak)) {
             return new Keycloak(config);
         }
@@ -40,7 +40,7 @@
             }
         }
 
-        kc.init = function (initOptions) {
+        kc.init = function(initOptions) {
             kc.authenticated = false;
 
             callbackStorage = createCallbackStorage();
@@ -125,9 +125,9 @@
                     if (!prompt) {
                         options.prompt = 'none';
                     }
-                    kc.login(options).success(function () {
+                    kc.login(options).success(function() {
                         initPromise.setSuccess();
-                    }).error(function () {
+                    }).error(function() {
                         initPromise.setError();
                     });
                 }
@@ -137,9 +137,9 @@
                     case 'check-sso':
                         if (loginIframe.enable) {
                             setupCheckLoginIframe().success(function() {
-                                checkLoginIframe().success(function () {
+                                checkLoginIframe().success(function() {
                                     doLogin(false);
-                                }).error(function () {
+                                }).error(function() {
                                     initPromise.setSuccess();
                                 });
                             });
@@ -169,10 +169,10 @@
 
                         if (loginIframe.enable) {
                             setupCheckLoginIframe().success(function() {
-                                checkLoginIframe().success(function () {
+                                checkLoginIframe().success(function() {
                                     kc.onAuthSuccess && kc.onAuthSuccess();
                                     initPromise.setSuccess();
-                                }).error(function () {
+                                }).error(function() {
                                     setToken(null, null, null);
                                     initPromise.setSuccess();
                                 });
@@ -208,7 +208,7 @@
             return promise.promise;
         }
 
-        kc.login = function (options) {
+        kc.login = function(options) {
             return adapter.login(options);
         }
 
@@ -237,15 +237,15 @@
 
             var scope = (options && options.scope) ? "openid " + options.scope : "openid";
 
-            var url = getRealmUrl()
-                + '/protocol/openid-connect/' + action
-                + '?client_id=' + encodeURIComponent(kc.clientId)
-                + '&redirect_uri=' + encodeURIComponent(redirectUri)
-                + '&state=' + encodeURIComponent(state)
-                + '&nonce=' + encodeURIComponent(nonce)
-                + '&response_mode=' + encodeURIComponent(kc.responseMode)
-                + '&response_type=' + encodeURIComponent(kc.responseType)
-                + '&scope=' + encodeURIComponent(scope);
+            var url = getRealmUrl() +
+                '/protocol/openid-connect/' + action +
+                '?client_id=' + encodeURIComponent(kc.clientId) +
+                '&redirect_uri=' + encodeURIComponent(redirectUri) +
+                '&state=' + encodeURIComponent(state) +
+                '&nonce=' + encodeURIComponent(nonce) +
+                '&response_mode=' + encodeURIComponent(kc.responseMode) +
+                '&response_type=' + encodeURIComponent(kc.responseType) +
+                '&scope=' + encodeURIComponent(scope);
 
             if (options && options.prompt) {
                 url += '&prompt=' + encodeURIComponent(options.prompt);
@@ -275,14 +275,14 @@
         }
 
         kc.createLogoutUrl = function(options) {
-            var url = getRealmUrl()
-                + '/protocol/openid-connect/logout'
-                + '?redirect_uri=' + encodeURIComponent(adapter.redirectUri(options, false));
+            var url = getRealmUrl() +
+                '/protocol/openid-connect/logout' +
+                '?redirect_uri=' + encodeURIComponent(adapter.redirectUri(options, false));
 
             return url;
         }
 
-        kc.register = function (options) {
+        kc.register = function(options) {
             return adapter.register(options);
         }
 
@@ -295,10 +295,10 @@
         }
 
         kc.createAccountUrl = function(options) {
-            var url = getRealmUrl()
-                + '/account'
-                + '?referrer=' + encodeURIComponent(kc.clientId)
-                + '&referrer_uri=' + encodeURIComponent(adapter.redirectUri(options));
+            var url = getRealmUrl() +
+                '/account' +
+                '?referrer=' + encodeURIComponent(kc.clientId) +
+                '&referrer_uri=' + encodeURIComponent(adapter.redirectUri(options));
 
             return url;
         }
@@ -307,7 +307,7 @@
             return adapter.accountManagement();
         }
 
-        kc.hasRealmRole = function (role) {
+        kc.hasRealmRole = function(role) {
             var access = kc.realmAccess;
             return !!access && access.roles.indexOf(role) >= 0;
         }
@@ -330,7 +330,7 @@
 
             var promise = createPromise();
 
-            req.onreadystatechange = function () {
+            req.onreadystatechange = function() {
                 if (req.readyState == 4) {
                     if (req.status == 200) {
                         kc.profile = JSON.parse(req.responseText);
@@ -355,7 +355,7 @@
 
             var promise = createPromise();
 
-            req.onreadystatechange = function () {
+            req.onreadystatechange = function() {
                 if (req.readyState == 4) {
                     if (req.status == 200) {
                         kc.userInfo = JSON.parse(req.responseText);
@@ -372,7 +372,7 @@
         }
 
         kc.isTokenExpired = function(minValidity) {
-            if (!kc.tokenParsed || (!kc.refreshToken && kc.flow != 'implicit' )) {
+            if (!kc.tokenParsed || (!kc.refreshToken && kc.flow != 'implicit')) {
                 throw 'Not authenticated';
             }
 
@@ -430,7 +430,7 @@
 
                         var timeLocal = new Date().getTime();
 
-                        req.onreadystatechange = function () {
+                        req.onreadystatechange = function() {
                             if (req.readyState == 4) {
                                 if (req.status == 200) {
                                     console.info('[KEYCLOAK] Token refreshed');
@@ -495,7 +495,7 @@
 
         function getOrigin() {
             if (!window.location.origin) {
-                return window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
+                return window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
             } else {
                 return window.location.origin;
             }
@@ -592,7 +592,7 @@
                 req.open('GET', configUrl, true);
                 req.setRequestHeader('Accept', 'application/json');
 
-                req.onreadystatechange = function () {
+                req.onreadystatechange = function() {
                     if (req.readyState == 4) {
                         if (req.status == 200 || fileLoaded(req)) {
                             var config = JSON.parse(req.responseText);
@@ -708,8 +708,7 @@
 
             str = str.replace('/-/g', '+');
             str = str.replace('/_/g', '/');
-            switch (str.length % 4)
-            {
+            switch (str.length % 4) {
                 case 0:
                     break;
                 case 2:
@@ -834,7 +833,7 @@
                 }
                 promise.setSuccess();
 
-                setTimeout(check, loginIframe.interval * 1000);
+                // setTimeout(check, loginIframe.interval * 1000);
             }
 
             var src = getRealmUrl() + '/protocol/openid-connect/login-status-iframe.html';
@@ -842,8 +841,8 @@
                 src = src + '?version=' + kc.iframeVersion;
             }
 
-            iframe.setAttribute('src', src );
-            iframe.setAttribute('title', 'keycloak-session-iframe' );
+            iframe.setAttribute('src', src);
+            iframe.setAttribute('title', 'keycloak-session-iframe');
             iframe.style.display = 'none';
             document.body.appendChild(iframe);
 
@@ -888,7 +887,7 @@
         function checkLoginIframe() {
             var promise = createPromise();
 
-            if (loginIframe.iframe && loginIframe.iframeOrigin ) {
+            if (loginIframe.iframe && loginIframe.iframeOrigin) {
                 var msg = kc.clientId + ' ' + kc.sessionId;
                 loginIframe.callbackList.push(promise);
                 var origin = loginIframe.iframeOrigin;
@@ -920,7 +919,7 @@
                         return createPromise().promise;
                     },
 
-                    accountManagement : function() {
+                    accountManagement: function() {
                         window.location.href = kc.createAccountUrl();
                         return createPromise().promise;
                     },
@@ -1030,7 +1029,7 @@
                         return promise.promise;
                     },
 
-                    register : function() {
+                    register: function() {
                         var registerUrl = kc.createRegisterUrl();
                         var ref = cordovaOpenWindowWrapper(registerUrl, '_blank', 'location=no');
                         ref.addEventListener('loadstart', function(event) {
@@ -1040,7 +1039,7 @@
                         });
                     },
 
-                    accountManagement : function() {
+                    accountManagement: function() {
                         var accountUrl = kc.createAccountUrl();
                         var ref = cordovaOpenWindowWrapper(accountUrl, '_blank', 'location=no');
                         ref.addEventListener('loadstart', function(event) {
@@ -1071,7 +1070,7 @@
 
             function clearExpired() {
                 var time = new Date().getTime();
-                for (var i = 0; i < localStorage.length; i++)  {
+                for (var i = 0; i < localStorage.length; i++) {
                     var key = localStorage.key(i);
                     if (key && key.indexOf('kc-callback-') == 0) {
                         var value = localStorage.getItem(key);
@@ -1141,13 +1140,13 @@
                 setCookie(key, '', cookieExpiration(-100));
             };
 
-            var cookieExpiration = function (minutes) {
+            var cookieExpiration = function(minutes) {
                 var exp = new Date();
-                exp.setTime(exp.getTime() + (minutes*60*1000));
+                exp.setTime(exp.getTime() + (minutes * 60 * 1000));
                 return exp;
             };
 
-            var getCookie = function (key) {
+            var getCookie = function(key) {
                 var name = key + '=';
                 var ca = document.cookie.split(';');
                 for (var i = 0; i < ca.length; i++) {
@@ -1162,9 +1161,9 @@
                 return '';
             };
 
-            var setCookie = function (key, value, expirationDate) {
-                var cookie = key + '=' + value + '; '
-                    + 'expires=' + expirationDate.toUTCString() + '; ';
+            var setCookie = function(key, value, expirationDate) {
+                var cookie = key + '=' + value + '; ' +
+                    'expires=' + expirationDate.toUTCString() + '; ';
                 document.cookie = cookie;
             }
         };
@@ -1172,8 +1171,7 @@
         function createCallbackStorage() {
             try {
                 return new LocalStorage();
-            } catch (err) {
-            }
+            } catch (err) {}
 
             return new CookieStorage();
         }
@@ -1222,9 +1220,9 @@
             }
 
             var handleQueryParam = function(paramName, paramValue, oauth) {
-                var supportedOAuthParams = [ 'code', 'state', 'error', 'error_description' ];
+                var supportedOAuthParams = ['code', 'state', 'error', 'error_description'];
 
-                for (var i = 0 ; i< supportedOAuthParams.length ; i++) {
+                for (var i = 0; i < supportedOAuthParams.length; i++) {
                     if (paramName === supportedOAuthParams[i]) {
                         oauth[paramName] = paramValue;
                         return true;
@@ -1272,13 +1270,13 @@
 
     }
 
-    if ( typeof module === "object" && module && typeof module.exports === "object" ) {
+    if (typeof module === "object" && module && typeof module.exports === "object") {
         module.exports = Keycloak;
     } else {
         window.Keycloak = Keycloak;
 
-        if ( typeof define === "function" && define.amd ) {
-            define( "keycloak", [], function () { return Keycloak; } );
+        if (typeof define === "function" && define.amd) {
+            define("keycloak", [], function() { return Keycloak; });
         }
     }
-})( window );
+})(window);
